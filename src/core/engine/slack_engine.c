@@ -90,6 +90,7 @@ void slack_engine_advance(SlackEngine *engine, uint32_t frames) {
   next_frame_position = engine->transport.frame_position + frames;
   if (next_frame_position < engine->transport.frame_position) {
     engine->transport.frame_position = UINT64_MAX;
+    engine->transport.playing = false;
     return;
   }
 
@@ -104,9 +105,5 @@ double slack_engine_position_beats(const SlackEngine *engine) {
   }
 
   samples_per_beat = (60.0 * engine->transport.sample_rate) / engine->project.tempo_bpm;
-  if (samples_per_beat <= 0.0) {
-    return 0.0;
-  }
-
   return (double)engine->transport.frame_position / samples_per_beat;
 }
